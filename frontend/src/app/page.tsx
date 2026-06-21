@@ -1,101 +1,49 @@
-"use client";
+import UserList from "@/components/UserList";
 
-import { useParams } from "next/navigation";
-import { useUser } from "@/hooks/useUser";
-
-export default function UserDetailPage() {
-  const params = useParams();
-  const id = Number(params.id);
-  const { user, loading, error, updateUser } = useUser(id);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-gray-400 text-sm">読み込み中...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-          エラー: {error}
-        </p>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        <p className="text-sm text-gray-500">ユーザーが見つかりません</p>
-      </div>
-    );
-  }
-
+export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-          <div className="flex items-center gap-4">
-            {user.avatar_url ? (
-              <img
-                src={user.avatar_url}
-                alt={user.name}
-                className="w-16 h-16 rounded-full object-cover border border-gray-200"
-              />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-xl font-bold">
-                {user.name.charAt(0)}
-              </div>
-            )}
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-gray-900">{user.name}</h1>
-                <span
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    user.is_active
-                      ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-500"
-                  }`}
-                >
-                  {user.is_active ? "有効" : "無効"}
-                </span>
-              </div>
-              <p className="text-sm text-gray-500 mt-0.5">{user.email}</p>
-            </div>
-          </div>
+      <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center pt-10">バクマン（仮）</h1>
 
-          <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                生年月日
-              </dt>
-              <dd className="mt-1 text-sm text-gray-800">
-                {user.birth_date ?? "未設定"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                登録日時
-              </dt>
-              <dd className="mt-1 text-sm text-gray-800">
-                {new Date(user.created_at).toLocaleString("ja-JP")}
-              </dd>
-            </div>
-            {user.bio && (
-              <div className="sm:col-span-2">
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  自己紹介
-                </dt>
-                <dd className="mt-1 text-sm text-gray-800 whitespace-pre-wrap">
-                  {user.bio}
-                </dd>
-              </div>
-            )}
-          </dl>
+      {/* プロフィールカード（ワイヤーフレーム）：max-w上限なし、画面幅100% */}
+      <div className="bg-amber-400 rounded-3xl p-6 w-full mb-10">
+        {/* アイコン＋名前 */}
+        <div className="flex items-center gap-4 mb-4 flex-wrap sm:flex-nowrap">
+          <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center text-center text-sm font-medium text-gray-700 shrink-0">
+            アイコン
+            <br />
+            画像
+          </div>
+          <div className="flex-1 bg-white rounded-2xl px-4 py-5 text-center">
+            <p className="font-bold text-gray-900">名前（ペンネーム）</p>
+            <p className="text-gray-700"></p>
+          </div>
         </div>
+
+        {/* 作品URL */}
+        <div className="bg-white rounded-2xl px-6 py-6 mb-4 text-center text-gray-900">
+          <p className="font-medium mb-2">作品URLを記載するところ</p>
+          <p className="leading-tight"></p>
+          <p className="leading-tight"></p>
+          <p className="leading-tight"></p>
+        </div>
+
+        {/* 自己紹介文 */}
+        <div className="bg-white rounded-2xl px-6 py-10 mb-4 text-center text-gray-900">
+          <p className="font-medium">自己紹介文</p>
+          <p className="font-bold"></p>
+        </div>
+
+        {/* 自分の性格 */}
+        <div className="bg-white rounded-2xl px-6 py-10 text-center text-gray-900">
+          <p className="font-medium">自分の性格</p>
+          <p className="font-bold"></p>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4">
+        {/* <UserList /> */}
+        <h1 className="text-2xl font-bold text-gray-900 mb-8 mt-10 text-center">マッチング検索一覧</h1>
       </div>
     </main>
   );
