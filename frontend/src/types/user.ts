@@ -14,6 +14,7 @@ export type User = {
 export type UserCreate = {
   name: string;
   email: string;
+  password: string;   // ← 追加
 };
 
 export type UserUpdate = {

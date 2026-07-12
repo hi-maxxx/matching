@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
 type RequestOptions = {
@@ -7,11 +9,13 @@ type RequestOptions = {
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body } = options;
+  const token = Cookies.get("access_token"); // クッキーからアクセストークンを取得 追加
 
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {
       "Content-Type": "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),// アクセストークンが存在する場合のみ Authorization ヘッダーを追加　追加
     },
     body: body ? JSON.stringify(body) : undefined,
   });
