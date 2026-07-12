@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session # type: ignore
 from app.models.user import User
 from app.schemas.user import UserCreate, UserUpdate
+from app.core.security import hash_password
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     """ユーザー一覧取得"""
@@ -10,9 +11,14 @@ def get_user(db: Session, user_id: int):
     """ユーザー1件取得"""
     return db.query(User).filter(User.id == user_id).first()
 
+def get_user_by_email(db: Session, email: str):
+    """メールアドレスでユーザーを検索（ログイン時に使用）"""
+    return db.query(User).filter(User.email == email).first()
+
 def create_user(db: Session, user: UserCreate):
     """ユーザー作成"""
-    db_user = User(name=user.name, email=user.email,phone="テスト",password="テスト",penname="テスト",introduction="テスト",personality="テスト",work="テスト")
+    db_user = User(name=user.name, email=user.email,phone="テスト",penname="テスト",introduction="テスト",personality="テスト",work="テスト",hashed_password=hash_password(user.password), ) # ← ハッシュ化して保存
+
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

@@ -7,6 +7,8 @@ class UserCreate(BaseModel):
     """POST リクエスト時に受け取るデータ"""
     name: str
     email: EmailStr
+    password: str #← 追加
+
 
 class UserUpdate(BaseModel):
     """PUT リクエスト時に受け取るデータ（全項目を一括更新）"""

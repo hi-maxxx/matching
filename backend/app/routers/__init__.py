@@ -3,3 +3,4 @@ from .matching import router as matching_router
 from .chatroom import router as chatroom_router
 from .likes import router as likes_router
 from .message import router as message_router   # ← 追加
+from .auth import router as auth_router   # ← 追加
