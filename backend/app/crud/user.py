@@ -38,6 +38,7 @@ def update_user(db: Session, user_id: int, user: UserUpdate):
     db_user.birth_date = user.birth_date
     db_user.bio = user.bio
     db_user.avatar_url = user.avatar_url
+    db_user.personality = user.personality   # ← 追加
     db.commit()
     db.refresh(db_user)
     return db_user

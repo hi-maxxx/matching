@@ -7,7 +7,7 @@ class UserCreate(BaseModel):
     """POST リクエスト時に受け取るデータ"""
     name: str
     email: EmailStr
-    password: str #← 追加
+    password: str
 
 
 class UserUpdate(BaseModel):
@@ -17,6 +17,8 @@ class UserUpdate(BaseModel):
     birth_date: Optional[date] = None
     bio: Optional[str] = None
     avatar_url: Optional[str] = None
+    personality: Optional[str] = None
+
 
 class UserResponse(BaseModel):
     """レスポンスとして返すデータ"""
@@ -27,6 +29,7 @@ class UserResponse(BaseModel):
     birth_date: Optional[date] = None
     bio: Optional[str] = None
     avatar_url: Optional[str] = None
+    personality: Optional[str] = None
     created_at: datetime
 
     class Config:

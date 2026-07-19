@@ -7,6 +7,7 @@ export type User = {
   birth_date: string | null;   // 追加
   bio: string | null;          // 追加
   avatar_url: string | null;   // 追加
+  personality: string | null;  // 追加
   created_at: string;
 };
 
@@ -23,4 +24,5 @@ export type UserUpdate = {
   birth_date: string | null;
   bio: string | null;
   avatar_url: string | null;
+  personality: string | null;  // 追加
 };

@@ -33,9 +33,12 @@ export default function UserForm({ onSubmit }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm"
+      className="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm opacity-50 pointer-events-none select-none"
     >
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">ユーザー作成</h2>
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        ユーザー作成
+        <span className="ml-2 text-xs font-normal text-gray-400">（現在利用できません）</span>
+      </h2>
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2 mb-4">
@@ -76,15 +79,14 @@ export default function UserForm({ onSubmit }: Props) {
           placeholder="000-000-0000"
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-
       </div>
 
       <button
         type="submit"
-        disabled={submitting}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
+        disabled
+        className="w-full bg-gray-300 text-white text-sm font-medium rounded-lg px-4 py-2 cursor-not-allowed"
       >
-        {submitting ? "作成中..." : "作成する"}
+        作成する
       </button>
     </form>
   );
