@@ -5,8 +5,8 @@ import UserCard from "./UserCard";
 import UserForm from "./UserForm";
 
 export default function UserList() {
-  const { users, loading, error, createUser, deleteUser } = useUsers();
-
+  const { users, loading, error, createUser, deactivateUser } = useUsers();
+//deleteUser → deactivateUser（useUsersから取得する変数名）
   if (loading) {
     return (
       <div className="flex justify-center items-center py-16">
@@ -41,7 +41,7 @@ export default function UserList() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {users.map((user) => (
-            <UserCard key={user.id} user={user} onDelete={deleteUser} />
+            <UserCard key={user.id} user={user} onDeactivate={deactivateUser} />//<UserCard onDelete={deleteUser} /> → <UserCard onDeactivate={deactivateUser} />
           ))}
         </div>
       )}

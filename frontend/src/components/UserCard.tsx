@@ -3,10 +3,10 @@ import { User } from "@/types/user";
 
 type Props = {
   user: User;
-  onDelete: (id: number) => void;
+  onDeactivate: (id: number) => void; //PropsのonDelete → onDeactivate
 };
 
-export default function UserCard({ user, onDelete }: Props) {
+export default function UserCard({ user, onDeactivate }: Props) {
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between">
@@ -37,10 +37,10 @@ export default function UserCard({ user, onDelete }: Props) {
           詳細
         </Link>
         <button
-          onClick={() => onDelete(user.id)}
-          className="flex-1 text-sm text-red-600 border border-red-200 rounded-lg px-3 py-1.5 hover:bg-red-50 transition-colors"
+          onClick={() => onDeactivate(user.id)}//ボタンのonClickをonDeactivate呼び出しに、文言を「削除」→「無効にする」に、色をred→orangeに変更
+          className="flex-1 text-sm text-orange-600 border border-orange-200 rounded-lg px-3 py-1.5 hover:bg-orange-50 transition-colors"
         >
-          削除
+          無効化
         </button>
       </div>
     </div>

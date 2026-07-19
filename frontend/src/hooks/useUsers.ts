@@ -34,19 +34,30 @@ export function useUsers() {
     }
   };
 
-  // ユーザー削除
-  const deleteUser = async (id: number) => {
+  // ユーザー無効化
+  const deactivateUser = async (id: number) => {
     try {
-      await api.delete(`/users/${id}`);
+      await api.patch<User>(`/users/${id}/deactivate`);
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (e) {
-      throw e instanceof Error ? e : new Error("削除に失敗しました");
+      throw e instanceof Error ? e : new Error("無効化に失敗しました");
     }
   };
+
+// ユーザー削除
+  //const deleteUser = async (id: number) => {
+   // try {
+   //   await api.delete(`/users/${id}`);
+     // setUsers((prev) => prev.filter((u) => u.id !== id));
+   // } catch (e) {
+   ///   throw e instanceof Error ? e : new Error("削除に失敗しました");
+   // }
+  //};
+
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  return { users, loading, error, createUser, deleteUser, refetch: fetchUsers };
+  return { users, loading, error, createUser, deactivateUser, refetch: fetchUsers };
 }

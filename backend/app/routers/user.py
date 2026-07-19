@@ -39,3 +39,20 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+#DELETEではなくPATCHで切り替えエンドポイントを追加します。
+@router.patch("/{user_id}/deactivate", response_model=UserResponse)
+def deactivate_user(user_id: int, db: Session = Depends(get_db)):
+    """ユーザーを無効化する"""
+    user = crud.deactivate_user(db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@router.patch("/{user_id}/activate", response_model=UserResponse)
+def activate_user(user_id: int, db: Session = Depends(get_db)):
+    """ユーザーを有効化する"""
+    user = crud.activate_user(db, user_id=user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
