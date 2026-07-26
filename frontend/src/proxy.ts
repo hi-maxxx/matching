@@ -16,7 +16,7 @@ export default function proxy(request: NextRequest) {
   }
 
   if(token && isPublic) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", request.url));// ログイン済みユーザーがログインページや登録ページにアクセスした場合、トップページにリダイレクトする　login ページに設定する。
   }
 
   return NextResponse.next();
