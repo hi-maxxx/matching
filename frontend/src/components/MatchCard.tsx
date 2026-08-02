@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { User } from "@/types/match";
 
 type Props = {
@@ -45,17 +46,26 @@ export default function MatchCard({ user, liked, onLike }: Props) {
         <p className="text-sm text-gray-600 mt-3 line-clamp-2">{user.bio}</p>
       )}
 
-      <button
-        onClick={handleLike}
-        disabled={liked || sending}
-        className={`w-full mt-4 text-sm font-medium rounded-lg px-3 py-2 transition-colors ${
-          liked
-            ? "bg-pink-50 text-pink-400 border border-pink-100 cursor-not-allowed"
-            : "bg-pink-600 text-white hover:bg-pink-700"
-        }`}
-      >
-        {liked ? "いいね済み" : sending ? "送信中..." : "♡ いいね"}
-      </button>
+      <div className="flex gap-2 mt-4">
+        <button
+          onClick={handleLike}
+          disabled={liked || sending}
+          className={`flex-1 text-sm font-medium rounded-lg px-3 py-2 transition-colors ${
+            liked
+              ? "bg-pink-50 text-pink-400 border border-pink-100 cursor-not-allowed"
+              : "bg-pink-600 text-white hover:bg-pink-700"
+          }`}
+        >
+          {liked ? "いいね済み" : sending ? "送信中..." : "♡ いいね"}
+        </button>
+
+        <Link
+          href={`/messages/${user.id}`}
+          className="flex-1 text-center text-sm text-blue-600 border border-blue-200 rounded-lg px-3 py-2 hover:bg-blue-50 transition-colors"
+        >
+          チャット
+        </Link>
+      </div>
     </div>
   );
 }
