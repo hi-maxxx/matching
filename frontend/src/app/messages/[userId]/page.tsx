@@ -1,19 +1,9 @@
 "use client";
 
-//画面本体: src/app/messages/[userId]/page.tsx（新規作成）
-//教材のスライド11枚目「吹き出し + 入力欄 + 送信ボタン」のデザインを参考に、Topframe.tsxと似た構成で作ります。自分が送ったメッセージと相手からのメッセージで、吹き出しの位置・色を変えます。
-//ポイント
-//useParams()でURLの[userId]部分（相手のID）を取得
-//useAuth()で自分のログイン情報を取得
-//msg.sender_id === currentUserIdで「自分が送った吹き出しか、相手が送った吹き出しか」を判定し、右寄せ・左寄せと色を切り替え
-//送信中は多重送信を防ぐためdisabledにしている
-//ファイルの配置場所について
-//Next.js App Routerでは、[userId]という**角括弧付きのフォルダ名が「動的ルート」**になります。以下のパスに配置してください。
-//frontend/src/app/messages/[userId]/page.tsx
-
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/hooks/useUser";
 import { useConversation } from "@/hooks/useConversation";
 import Link from "next/link";
 
@@ -23,6 +13,7 @@ export default function ConversationPage() {
   const { user, loading: authLoading } = useAuth();
   const currentUserId = user ? user.id : null;
 
+  const { user: otherUser, loading: otherUserLoading } = useUser(otherUserId);
   const { messages, loading, error, sendMessage } = useConversation(currentUserId, otherUserId);
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
@@ -69,6 +60,13 @@ export default function ConversationPage() {
           ← 一覧に戻る
         </Link>
 
+        {/* 相手の名前 */}
+        <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 mb-4">
+          <p className="text-base font-semibold text-gray-900">
+            {otherUserLoading ? "読み込み中..." : otherUser?.name ?? "不明なユーザー"}
+          </p>
+        </div>
+
         {/* メッセージ一覧 */}
         <div className="flex-1 bg-white border border-gray-200 rounded-xl p-4 mb-4 space-y-3 overflow-y-auto min-h-[400px]">
           {messages.length === 0 ? (
@@ -79,15 +77,12 @@ export default function ConversationPage() {
             messages.map((msg) => {
               const isMine = msg.sender_id === currentUserId;
               return (
-                <div
-                  key={msg.id}
-                  className={`flex ${isMine ? "justify-end" : "justify-start"}`}
-                >
+                <div key={msg.id} className="w-full flex">
                   <div
                     className={`max-w-[70%] rounded-2xl px-4 py-2 text-sm ${
                       isMine
-                        ? "bg-pink-600 text-white"
-                        : "bg-gray-100 text-gray-900"
+                        ? "bg-pink-600 text-white ml-auto"
+                        : "bg-gray-100 text-gray-900 mr-auto"
                     }`}
                   >
                     {msg.content}
