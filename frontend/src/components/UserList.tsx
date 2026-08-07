@@ -1,50 +1,23 @@
-"use client";
+import Link from "next/link";
+import Topframe from "@/components/Topframe";
 
-import { useUsers } from "@/hooks/useUsers";
-import UserCard from "./UserCard";
-import UserForm from "./UserForm";
-
-export default function UserList() {
-  const { users, loading, error, createUser, deactivateUser } = useUsers();
-//deleteUser → deactivateUser（useUsersから取得する変数名）
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-16">
-        <p className="text-gray-400 text-sm">読み込み中...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-        <p className="text-sm text-red-600">エラー: {error}</p>
-      </div>
-    );
-  }
-
+export default function Home() {
   return (
-    <div>
-      <UserForm onSubmit={async (input) => { await createUser(input); }} />
+    <main className="min-h-screen bg-gray-50">
+      <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center pt-10">バクマン（仮）</h1>
 
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
-        ユーザー一覧
-        <span className="ml-2 text-sm font-normal text-gray-400">
-          {users.length} 件
-        </span>
-      </h2>
+      <Topframe />
 
-      {users.length === 0 ? (
-        <div className="text-center py-12 text-gray-400 text-sm">
-          ユーザーがいません
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="flex justify-center mb-10">
+          <Link
+            href="/matching"
+            className="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-full px-8 py-3 shadow-sm transition-colors"
+          >
+            ♡ マッチング相手を探す
+          </Link>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {users.map((user) => (
-            <UserCard key={user.id} user={user} onDeactivate={deactivateUser} />//<UserCard onDelete={deleteUser} /> → <UserCard onDeactivate={deactivateUser} />
-          ))}
-        </div>
-      )}
-    </div>
+      </div>
+    </main>
   );
 }

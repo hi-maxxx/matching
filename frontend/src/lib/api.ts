@@ -13,6 +13,46 @@ type RequestOptions = {
   body?: unknown;
 };
 
+/**
+ * API から返ってきたエラー。
+ * fieldErrors には { email: "メールの形式が正しくありません" } のように
+ * 入力欄ごとのエラーが入る（バリデーションエラー = 422 のとき）。
+ */
+export class ApiError extends Error {
+  status: number;
+  fieldErrors: Record<string, string>;
+
+  constructor(message: string, status: number, fieldErrors: Record<string, string> = {}) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.fieldErrors = fieldErrors;
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
+// FastAPI のエラー形式を ApiError に変換する
+function toApiError(status: number, data: unknown): ApiError {
+  const detail = (data as { detail?: unknown })?.detail;
+
+  // 422 バリデーションエラー: detail が配列で返ってくる
+  // 例) [{ loc: ["body", "email"], msg: "..." }]
+  if (Array.isArray(detail)) {
+    const fieldErrors: Record<string, string> = {};
+    for (const item of detail) {
+      const loc = (item as { loc?: unknown[] })?.loc;
+      const field = Array.isArray(loc) ? String(loc[loc.length - 1]) : "";
+      const msg = (item as { msg?: string })?.msg ?? "入力内容が正しくありません";
+      if (field && !fieldErrors[field]) fieldErrors[field] = msg;
+    }
+    const first = Object.values(fieldErrors)[0];
+    return new ApiError(first ?? "入力内容を確認してください", status, fieldErrors);
+  }
+
+  if (typeof detail === "string") return new ApiError(detail, status);
+  return new ApiError(`HTTP error: ${status}`, status);
+}
+
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body } = options;
   const token = Cookies.get("access_token"); // クッキーからアクセストークンを取得 追加
@@ -27,8 +67,8 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   });
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.detail || `HTTP error: ${res.status}`);
+    const data = await res.json().catch(() => ({}));
+    throw toApiError(res.status, data);
   }
 
   // 204 No Content など body が空の場合の考慮

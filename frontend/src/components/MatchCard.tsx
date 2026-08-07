@@ -1,10 +1,5 @@
 "use client";
 
-//了解です、A案で進めましょう。MatchCard.tsxを修正して、いいね済みの相手だけチャットボタンを表示するようにします。
-//変更点
-//likedがtrueの時だけ、実際に/messages/{user.id}へ遷移できる「チャット」リンクを表示
-//likedがfalseの時は、クリックできないグレーアウトした「チャット」ボタン（disabledのただのボタン）を表示。title属性でホバー時に理由が分かるようにしています
-
 import { useState } from "react";
 import Link from "next/link";
 import { User } from "@/types/match";
@@ -29,7 +24,7 @@ export default function MatchCard({ user, liked, onLike }: Props) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-center gap-3">
+      <Link href={`/users/${user.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
         {user.avatar_url ? (
           <img
             src={user.avatar_url}
@@ -45,7 +40,7 @@ export default function MatchCard({ user, liked, onLike }: Props) {
           <p className="text-base font-semibold text-gray-800">{user.name}</p>
           <p className="text-sm text-gray-500 mt-0.5">{user.email}</p>
         </div>
-      </div>
+      </Link>
 
       {user.bio && (
         <p className="text-sm text-gray-600 mt-3 line-clamp-2">{user.bio}</p>
@@ -84,3 +79,10 @@ export default function MatchCard({ user, liked, onLike }: Props) {
     </div>
   );
 }
+
+//アイコン画像＋名前＋メールアドレスの部分を<Link href={/users/${user.id}}>で囲み、クリックすると相手の詳細プロフィール（閲覧専用）に飛べるようにした
+//いいね・チャットボタンはそのまま変更なし
+//了解です、A案で進めましょう。MatchCard.tsxを修正して、いいね済みの相手だけチャットボタンを表示するようにします。
+//変更点
+//likedがtrueの時だけ、実際に/messages/{user.id}へ遷移できる「チャット」リンクを表示
+//likedがfalseの時は、クリックできないグレーアウトした「チャット」ボタン（disabledのただのボタン）を表示。title属性でホバー時に理由が分かるようにしています

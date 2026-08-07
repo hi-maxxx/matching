@@ -9,7 +9,6 @@ export default function Header() {
   const { user, loading, logout } = useAuth();
 
   const handleLogout = () => {
-    //console.log("ログアウト処理を実行");
     logout();
     router.push("/login");
   };
@@ -25,9 +24,12 @@ export default function Header() {
           <span className="text-sm text-gray-400">読み込み中...</span>
         ) : user ? (
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-700">
+            <Link
+              href="/"
+              className="text-sm text-gray-700 hover:underline"
+            >
               {user.name} さん
-            </span>
+            </Link>
             <button
               onClick={handleLogout}
               className="text-sm text-red-600 border border-red-200 rounded-lg px-3 py-1.5 hover:bg-red-50 transition-colors"

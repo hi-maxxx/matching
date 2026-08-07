@@ -2,13 +2,12 @@
 
 import { useParams } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
-import ProfileEditForm from "@/components/ProfileEditForm";
 import Link from "next/link";
 
 export default function UserDetailPage() {
   const params = useParams();
   const id     = Number(params.id);
-  const { user, loading, error, updateUser } = useUser(id);
+  const { user, loading, error } = useUser(id);
 
   if (loading) {
     return (
@@ -42,14 +41,14 @@ export default function UserDetailPage() {
 
         {/* 戻るリンク */}
         <Link
-          href="/"
+          href="/matching"
           className="text-sm text-blue-600 hover:underline inline-flex items-center gap-1 mb-6"
         >
           ← 一覧に戻る
         </Link>
 
-        {/* プロフィール表示カード */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
+        {/* プロフィール表示カード（閲覧専用） */}
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div className="flex items-center gap-4">
             {user.avatar_url ? (
               <img
@@ -106,13 +105,24 @@ export default function UserDetailPage() {
                 </dd>
               </div>
             )}
+            {user.personality && (
+              <div className="sm:col-span-2">
+                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  性格
+                </dt>
+                <dd className="mt-1 text-sm text-gray-800 whitespace-pre-wrap">
+                  {user.personality}
+                </dd>
+              </div>
+            )}
           </dl>
         </div>
-
-        {/* プロフィール編集フォーム */}
-        <ProfileEditForm user={user} onSubmit={updateUser} />
-
       </div>
     </main>
   );
 }
+
+//ProfileEditFormのimportと呼び出しを削除（編集機能を完全に排除）
+//useUserからupdateUserを受け取らなくなった（もう使わないため）
+//「一覧に戻る」の遷移先を/から/matchingに変更（他人のプロフィールを見るのはマッチング画面からのはずなので）
+//おまけでpersonalityの表示も追加（今まで表示されていなかったので）
