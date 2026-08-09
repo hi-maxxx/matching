@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Cookies from "js-cookie";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/lib/api";
 import { User } from "@/types/user";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
 export default function Topframe() {
   const { user, loading, refreshUser } = useAuth();
@@ -15,6 +18,7 @@ export default function Topframe() {
   const [bio, setBio] = useState("");
   const [personality, setPersonality] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const startEditing = () => {
@@ -26,6 +30,40 @@ export default function Topframe() {
     setPersonality(user?.personality ?? "");
     setError(null);
     setEditing(true);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const token = Cookies.get("access_token");
+      const res = await fetch(`${API_BASE}/upload/avatar`, {
+        method: "POST",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("画像のアップロードに失敗しました");
+      }
+
+      const data = await res.json();
+      // バックエンドは相対パス（/uploads/xxx.png）を返すので、フルURLに組み立てる
+      const fullUrl = `${API_BASE}${data.url}`;
+      setAvatarUrl(fullUrl);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "アップロードに失敗しました");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSave = async () => {
@@ -115,19 +153,31 @@ export default function Topframe() {
           )}
         </div>
 
-        {/* アイコン画像URL */}
+        {/* アイコン画像 */}
         <div className="bg-white rounded-2xl px-6 py-4 mb-4 text-gray-900">
-          <p className="font-medium text-center mb-2">アイコン画像URL</p>
+          <p className="font-medium text-center mb-2">アイコン画像</p>
           {editing ? (
-            <input
-              type="url"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              placeholder="https://example.com/avatar.jpg"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-center focus:outline-none focus:ring-2 focus:ring-amber-500"
-            />
+            <div className="flex flex-col items-center gap-2">
+              {avatarUrl && (
+                <img
+                  src={avatarUrl}
+                  alt="プレビュー"
+                  className="w-20 h-20 rounded-full object-cover border border-gray-200"
+                />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                disabled={uploading}
+                className="text-sm"
+              />
+              {uploading && <p className="text-xs text-gray-400">アップロード中...</p>}
+            </div>
           ) : (
-            <p className="text-center text-sm text-gray-500 truncate">{user?.avatar_url ?? "未設定"}</p>
+            <p className="text-center text-sm text-gray-500">
+              {user?.avatar_url ? "設定済み" : "未設定"}
+            </p>
           )}
         </div>
 
@@ -180,7 +230,7 @@ export default function Topframe() {
               <div className="flex gap-2">
                 <button
                   onClick={handleSave}
-                  disabled={saving}
+                  disabled={saving || uploading}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-sm font-medium rounded-lg px-4 py-2"
                 >
                   {saving ? "保存中..." : "保存する"}
@@ -211,3 +261,13 @@ export default function Topframe() {
 //それぞれの項目に「編集中は入力欄、それ以外は表示のみ」という同じパターンで欄を追加
 //handleSaveで全項目を送るように変更、エラーメッセージの表示も追加
 //startEditingで、編集開始時に現在の値を全項目分セットするよう変更
+
+//④ Frontend: ファイル選択＋アップロード機能をTopframe.tsxに追加
+//最後にフロントエンド側です。今のavatar_urlのテキスト入力欄を、「ファイルを選ぶ」ボタンに変えます。
+
+//修正の考え方
+//<input type="file">でファイルを選ばせる
+//選んだら即座にPOST /upload/avatarへ送信（FormDataという特別な形式を使う）
+//返ってきたurlをavatarUrlのstateにセットする
+//「保存する」ボタンを押したときに、他の項目と一緒にDBへ保存される（この部分は今のままでOK）
+//変更箇所: src/components/Topframe.tsxのアイコン画像URL欄

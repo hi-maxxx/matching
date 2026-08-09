@@ -20,13 +20,14 @@ services:
       - "8001:8001"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/mydb
-      SECRET_KEY: "dev-secret-key-change-in-production"   # ← 追加（開発用。任意の文字列でOK）
-      ALGORITHM: "HS256"                                  # ← 追加
-      ACCESS_TOKEN_EXPIRE_MINUTES: "60"                   # ← 追加
+      SECRET_KEY: "dev-secret-key-change-in-production"
+      ALGORITHM: "HS256"
+      ACCESS_TOKEN_EXPIRE_MINUTES: "60"
     depends_on:
       - db
     volumes:
       - ./backend:/app
+      - uploads_data:/app/uploads
 
   frontend:
     build: ./frontend
@@ -44,5 +45,9 @@ services:
 
 volumes:
   postgres_data:
+  uploads_data:
 
 #docker-compose.yalはdockerのコンテナの構築するコマンド
+#解説
+#- uploads_data:/app/uploads：コンテナの中の/app/uploadsというフォルダが、uploads_dataという名前の永続化領域に自動的に保存される、という設定です。これにより、docker compose restartやdocker compose down/upをしても、アップロードした画像が消えなくなります。
+#ファイル末尾のvolumes:セクションにuploads_data:を追加するのは、「このボリュームを使いますよ」という宣言のようなものです（postgres_dataと同じ書き方です）。
