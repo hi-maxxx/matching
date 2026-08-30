@@ -271,3 +271,7 @@ export default function Topframe() {
 //返ってきたurlをavatarUrlのstateにセットする
 //「保存する」ボタンを押したときに、他の項目と一緒にDBへ保存される（この部分は今のままでOK）
 //変更箇所: src/components/Topframe.tsxのアイコン画像URL欄
+//新しく必要になるhandleFileChange関数とuploading状態（コンポーネントの上部、他のuseStateと一緒に追加）
+
+//なぜapi.tsのapi.postを使わないのか
+//api.tsのrequest関数は、送信データを毎回JSON.stringifyでJSON文字列に変換する作りになっています。しかし画像ファイルはFormDataという特別な形式で送る必要があり、JSON文字列には変換できません。そのため、この部分だけはfetchを直接使っています。
