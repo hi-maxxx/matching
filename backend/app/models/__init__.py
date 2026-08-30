@@ -4,3 +4,4 @@ from .matching import Matching
 from .chatroom import Chatroom
 from .likes import Like
 from .message import Message
+from .project import Project

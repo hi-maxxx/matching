@@ -4,3 +4,4 @@ from .chatroom import router as chatroom_router
 from .likes import router as likes_router
 from .message import router as message_router
 from .auth import router as auth_router
+from .project import router as project_router
