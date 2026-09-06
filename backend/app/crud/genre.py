@@ -15,3 +15,12 @@ def create_genre(db: Session, genre: GenreCreate):
     db.commit()
     db.refresh(db_genre)
     return db_genre
+
+
+def delete_genre(db: Session, genre_id: int):
+    """ジャンルを削除"""
+    db_genre = db.query(Genre).filter(Genre.id == genre_id).first()
+    if db_genre:
+        db.delete(db_genre)
+        db.commit()
+    return db_genre

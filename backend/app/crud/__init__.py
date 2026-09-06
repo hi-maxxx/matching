@@ -4,4 +4,5 @@ from .chatroom import get_chatrooms, get_chatroom, get_chatroom_by_matching_id, 
 from .likes import get_likes, get_likes_sent_by, create_like, delete_like
 from .message import get_messages, get_conversation, create_message, delete_message
 from .project import get_projects_between, create_project, delete_project
-from .genre import get_genres, create_genre
+from .genre import get_genres, create_genre, delete_genre
+from .project_tag import get_tags_by_project, create_tag, delete_tag

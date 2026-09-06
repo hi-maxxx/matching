@@ -6,3 +6,4 @@ from .message import router as message_router
 from .auth import router as auth_router
 from .project import router as project_router
 from .genre import router as genre_router
+from .project_tag import router as project_tag_router
