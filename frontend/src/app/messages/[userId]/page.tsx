@@ -7,6 +7,7 @@ import { useUser } from "@/hooks/useUser";
 import { useConversation } from "@/hooks/useConversation";
 import { useProjects } from "@/hooks/useProjects";
 import { useGenres } from "@/hooks/useGenres";
+import ProjectCard from "@/components/ProjectCard";
 import Link from "next/link";
 
 export default function ConversationPage() {
@@ -206,20 +207,7 @@ export default function ConversationPage() {
                   <p className="text-xs text-gray-400 text-center py-4">まだプロジェクトはありません</p>
                 ) : (
                   projects.map((p) => (
-                    <div key={p.id} className="border border-gray-200 rounded-lg p-3">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-semibold text-gray-900">{p.title}</p>
-                        <span className="text-xs bg-pink-50 text-pink-600 rounded-full px-2 py-0.5">
-                          {p.genre}
-                        </span>
-                      </div>
-                      {p.comment && (
-                        <p className="text-xs text-gray-600 mt-1 whitespace-pre-wrap">{p.comment}</p>
-                      )}
-                      {p.deadline && (
-                        <p className="text-xs text-gray-400 mt-1">期限: {p.deadline}</p>
-                      )}
-                    </div>
+                    <ProjectCard key={p.id} project={p} />
                   ))
                 )}
               </div>
