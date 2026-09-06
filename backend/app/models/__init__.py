@@ -7,3 +7,4 @@ from .message import Message
 from .project import Project
 from .genre import Genre
 from .project_tag import ProjectTag
+from .project_task import ProjectTask

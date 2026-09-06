@@ -7,3 +7,4 @@ from .message import MessageCreate, MessageResponse
 from .project import ProjectCreate, ProjectResponse
 from .genre import GenreCreate, GenreResponse
 from .project_tag import ProjectTagCreate, ProjectTagResponse
+from .project_task import ProjectTaskCreate, ProjectTaskUpdate, ProjectTaskResponse

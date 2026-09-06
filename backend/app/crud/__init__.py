@@ -6,3 +6,4 @@ from .message import get_messages, get_conversation, create_message, delete_mess
 from .project import get_projects_between, create_project, delete_project
 from .genre import get_genres, create_genre, delete_genre
 from .project_tag import get_tags_by_project, create_tag, delete_tag
+from .project_task import get_tasks_by_project, create_task, update_task, delete_task
