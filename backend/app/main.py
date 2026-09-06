@@ -8,6 +8,7 @@ from app.routers import message_router
 from app.routers import user_router, auth_router
 from app.routers.upload import router as upload_router
 from app.routers.project import router as project_router
+from app.routers import genre_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="My API", version="1.0.0")
@@ -29,7 +30,7 @@ app.include_router(message_router)
 app.include_router(auth_router)
 app.include_router(upload_router)
 app.include_router(project_router)
-
+app.include_router(genre_router)
 # アップロードされた画像を配信できるようにする
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 

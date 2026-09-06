@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useUser } from "@/hooks/useUser";
 import { useConversation } from "@/hooks/useConversation";
 import { useProjects } from "@/hooks/useProjects";
-import { GENRES, Genre } from "@/types/project";
+import { useGenres } from "@/hooks/useGenres";
 import Link from "next/link";
 
 export default function ConversationPage() {
@@ -23,6 +23,7 @@ export default function ConversationPage() {
     error: projectsError,
     createProject,
   } = useProjects(currentUserId, otherUserId);
+  const { genres, loading: genresLoading } = useGenres();
 
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
@@ -31,10 +32,17 @@ export default function ConversationPage() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
-  const [genre, setGenre] = useState<Genre>(GENRES[0]);
+  const [genre, setGenre] = useState("");
   const [deadline, setDeadline] = useState("");
   const [creatingProject, setCreatingProject] = useState(false);
   const [projectFormError, setProjectFormError] = useState<string | null>(null);
+
+  // ジャンル一覧が読み込まれたら、先頭のジャンルを初期選択にする
+  useEffect(() => {
+    if (genres.length > 0 && !genre) {
+      setGenre(genres[0].name);
+    }
+  }, [genres, genre]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,7 +72,7 @@ export default function ConversationPage() {
       });
       setTitle("");
       setComment("");
-      setGenre(GENRES[0]);
+      setGenre(genres[0]?.name ?? "");
       setDeadline("");
       setShowProjectForm(false);
     } catch (e) {
@@ -156,12 +164,17 @@ export default function ConversationPage() {
                     <label className="block text-xs font-medium text-gray-600 mb-1">ジャンル</label>
                     <select
                       value={genre}
-                      onChange={(e) => setGenre(e.target.value as Genre)}
+                      onChange={(e) => setGenre(e.target.value)}
+                      disabled={genresLoading}
                       className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
                     >
-                      {GENRES.map((g) => (
-                        <option key={g} value={g}>{g}</option>
-                      ))}
+                      {genresLoading ? (
+                        <option>読み込み中...</option>
+                      ) : (
+                        genres.map((g) => (
+                          <option key={g.id} value={g.name}>{g.name}</option>
+                        ))
+                      )}
                     </select>
                   </div>
                   <div>

@@ -4,3 +4,5 @@ from .matching import MatchingCreate , MatchingResponse
 from .chatroom import ChatroomCreate, ChatroomResponse
 from .likes import LikeCreate, LikeResponse
 from .message import MessageCreate, MessageResponse
+from .project import ProjectCreate, ProjectResponse
+from .genre import GenreCreate, GenreResponse
